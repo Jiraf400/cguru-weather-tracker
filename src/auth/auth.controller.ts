@@ -9,28 +9,22 @@ export class AuthController {
   constructor(private readonly service: AuthService) {}
 
   @Post('register')
-  async registerUser(
-    @Req() req: Request,
-    @Res() res: Response,
-    @Body() userRegDto: UserRegisterDto
-  ) {
-    //TODO add user fields validation
+  async registerUser(@Req() req: Request, @Res() res: Response, @Body() userRegDto: UserRegisterDto) {
+    if (!userRegDto || !userRegDto.fio || !userRegDto.login || !userRegDto.password) {
+      return res.status(400).json({ error: 'All fields must be filled' });
+    }
 
     const response = await this.service.registerNewUser(userRegDto);
 
     return res.status(201).json({
       status: 'OK',
       message: 'Successfully register',
-      body: response
+      body: response,
     });
   }
 
   @Post('login')
-  async loginUser(
-    @Req() req: Request,
-    @Res() res: Response,
-    @Body() userLoginDto: UserLoginDto
-  ) {
+  async loginUser(@Req() req: Request, @Res() res: Response, @Body() userLoginDto: UserLoginDto) {
     //TODO add user fields validation
 
     const response = await this.service.loginUser(userLoginDto);
@@ -38,7 +32,7 @@ export class AuthController {
     return res.status(200).json({
       status: 'OK',
       message: 'Successfully login',
-      body: response
+      body: response,
     });
   }
 }
