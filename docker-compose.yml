@@ -1,0 +1,13 @@
+version: '3'
+services:
+ cguru-mysql:
+    container_name: cguru-mysql
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: cguru_weather
+      MYSQL_USER: cguru
+      MYSQL_PASSWORD: cguru
+    ports:
+      - "3306:3306"
