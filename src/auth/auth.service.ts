@@ -6,12 +6,14 @@ import * as bcrypt from 'bcryptjs';
 import { User } from './user/user.entity';
 import { Repository } from 'typeorm';
 import { mapRegisterDtoToUser } from './dto/dto-mapper';
+import { TokenService } from 'src/shared/tokens/tokens.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private tokenService: TokenService,
   ) {}
 
   async registerNewUser(userRegDto: UserRegisterDto) {
@@ -25,13 +27,9 @@ export class AuthService {
 
     userRegDto.password = await this.hashPassword(userRegDto.password);
 
-    //TODO: generate apiToken
-
-    const apiToken = 'someToken';
+    const apiToken = await this.tokenService.generateApiToken();
 
     const user = mapRegisterDtoToUser(userRegDto, apiToken);
-
-    console.log(JSON.stringify(user));
 
     const saved = await this.userRepository.save(user);
 
@@ -53,11 +51,11 @@ export class AuthService {
       throw new HttpException('Authorization failed', 401);
     }
 
-    //TODO: generate new apiToken
-
-    const apiToken = `token`;
+    const apiToken = await this.tokenService.generateApiToken();
 
     user.apiToken = apiToken;
+
+    await this.userRepository.save(user);
 
     return { fio: user.fio, apiToken: apiToken };
   }

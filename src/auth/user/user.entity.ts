@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Action } from '../../weather/actions/action.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 @Entity({ name: 'users' })
 export class User {
@@ -14,6 +15,9 @@ export class User {
   @Column({ nullable: false })
   fio: string;
 
-  @Column({ nullable: false })
+  @Column({ unique: true, nullable: false })
   apiToken: string;
+
+  @OneToMany(() => Action, (action) => action.user)
+  actions: Action[];
 }
