@@ -4,6 +4,8 @@ import * as process from 'process';
 import * as dotenv from 'dotenv';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './auth/user/user.entity';
+import { WeatherModule } from './weather/weather.module';
+import { Action } from './weather/actions/action.entity';
 
 dotenv.config();
 
@@ -15,8 +17,9 @@ dotenv.config();
       url: `${process.env.MYSQL_URL}`,
       autoLoadEntities: true,
       synchronize: false,
-      entities: [User]
-    })
-  ]
+      entities: [User, Action],
+    }),
+    WeatherModule,
+  ],
 })
 export class AppModule {}
