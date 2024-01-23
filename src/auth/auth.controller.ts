@@ -25,7 +25,9 @@ export class AuthController {
 
   @Post('login')
   async loginUser(@Req() req: Request, @Res() res: Response, @Body() userLoginDto: UserLoginDto) {
-    //TODO add user fields validation
+    if (!userLoginDto || !userLoginDto.login || !userLoginDto.password) {
+      return res.status(400).json({ error: 'All fields must be filled' });
+    }
 
     const response = await this.service.loginUser(userLoginDto);
 
