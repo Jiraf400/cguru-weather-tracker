@@ -1,6 +1,17 @@
 version: '3'
 services:
- cguru-mysql:
+  weather-tracker:
+    build:
+      context: .
+    ports:
+      - 3000:3000
+    environment:
+      DATABASE_URL: ${MYSQL_URL}
+    depends_on:
+      - cguru-mysql
+    volumes:
+      - ./src:/app/src
+  cguru-mysql:
     container_name: cguru-mysql
     image: mysql
     restart: always
@@ -10,4 +21,4 @@ services:
       MYSQL_USER: cguru
       MYSQL_PASSWORD: cguru
     ports:
-      - "3306:3306"
+      - 3306:3306
